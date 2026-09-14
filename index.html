@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portafolio de Alcindo Chavarría, desarrollador Full Stack y estudiante de Ingeniería en Informática." />
+    <meta name="theme-color" content="#020617" />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem('portfolio-theme')
+        const theme = savedTheme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        document.documentElement.dataset.theme = theme
+      })()
+    </script>
+    <title>Alcindo Chavarría | Full Stack Developer</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
