@@ -1,7 +1,7 @@
 import { icon } from '../icons.js'
 
-export function certificateCard(cert) {
-  return `<article class="cert-card reveal">
+export function certificateCard(cert, index) {
+  return `<article class="cert-card reveal" data-certificate-index="${index}">
     <div class="cert-top">
       ${icon('award', 'size-5')}
       <div class="cert-actions">
@@ -26,7 +26,7 @@ export function certificateDialog() {
   </dialog>`
 }
 
-export function setupCertificates(certificates, showToast) {
+export function setupCertificates(certificates, showToast, getUi) {
   const dialog = document.querySelector('.certificate-dialog')
   const title = dialog.querySelector('#certificate-dialog-title')
   const issuer = dialog.querySelector('.dialog-issuer')
@@ -36,6 +36,7 @@ export function setupCertificates(certificates, showToast) {
 
   document.querySelectorAll('[data-preview-cert]').forEach(button => button.addEventListener('click', () => {
     const cert = findCertificate(button.dataset.previewCert)
+    const ui = getUi()
     title.textContent = cert.title
     issuer.textContent = `${cert.issuer} · ${cert.year}`
     if (cert.previewUrl) {
@@ -44,7 +45,7 @@ export function setupCertificates(certificates, showToast) {
         ? `<iframe src="${cert.previewUrl}#toolbar=0" title="Certificado ${cert.title}"></iframe>`
         : `<img src="${cert.previewUrl}" alt="Certificado ${cert.title}">`
     } else {
-      viewer.innerHTML = `<div class="certificate-empty">${icon('award', 'size-9')}<strong>Vista previa pendiente</strong><p>Agrega el PDF o imagen en <code>public/certificados</code> y configura <code>previewUrl</code> en <code>src/data/portfolio.js</code>.</p></div>`
+      viewer.innerHTML = `<div class="certificate-empty">${icon('award', 'size-9')}<strong>${ui.previewPending}</strong><p>${ui.previewHelp}</p></div>`
     }
     verifyLink.hidden = !cert.verifyUrl
     if (cert.verifyUrl) verifyLink.href = cert.verifyUrl
@@ -55,7 +56,7 @@ export function setupCertificates(certificates, showToast) {
   document.querySelectorAll('[data-verify-cert]').forEach(button => button.addEventListener('click', () => {
     const cert = findCertificate(button.dataset.verifyCert)
     if (cert.verifyUrl) window.open(cert.verifyUrl, '_blank', 'noopener,noreferrer')
-    else showToast(`Falta agregar el enlace oficial de: ${cert.title}`)
+    else showToast(`${getUi().missingCredential}: ${cert.title}`)
   }))
 
   const closeDialog = () => {

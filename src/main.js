@@ -4,13 +4,21 @@ import { icon } from './icons.js'
 import { certificateCard, certificateDialog, setupCertificates } from './components/certificates.js'
 
 const navItems = [
-  ['01', 'Sobre mí', 'sobre-mi'],
-  ['02', 'Skills', 'skills'],
-  ['03', 'Experiencia', 'experiencia'],
-  ['04', 'Proyectos', 'proyectos'],
-  ['05', 'Certificados', 'certificados'],
-  ['06', 'Contacto', 'contacto'],
+  ['01', 'Sobre mí', 'About me', 'sobre-mi'],
+  ['02', 'Skills', 'Skills', 'skills'],
+  ['03', 'Experiencia', 'Experience', 'experiencia'],
+  ['04', 'Proyectos', 'Projects', 'proyectos'],
+  ['05', 'Certificados', 'Certificates', 'certificados'],
+  ['06', 'Contacto', 'Contact', 'contacto'],
 ]
+
+const contactUrl = language => {
+  const subject = language === 'en' ? 'Contact from your portfolio' : 'Contacto desde tu portafolio'
+  const body = language === 'en'
+    ? 'Hello Alcindo, I visited your portfolio and would like to contact you.'
+    : 'Hola Alcindo, visité tu portafolio y me gustaría ponerme en contacto contigo.'
+  return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(profile.email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
 
 const sectionTitle = (number, title) => `
   <div class="section-title reveal">
@@ -40,18 +48,24 @@ const projectVisual = type => {
 
 const projectCard = (project, index) => {
   const repoAvailable = Boolean(project.repoUrl)
+  const deploymentAvailable = Boolean(project.deploymentUrl)
+  const deploymentButton = deploymentAvailable
+    ? `<a class="deployment-button" href="${project.deploymentUrl}" target="_blank" rel="noreferrer" aria-label="Abrir despliegue de ${project.title}"><span>RUN_DEPLOYMENT</span></a>`
+    : `<button class="deployment-button deployment-disabled" type="button" data-missing-deployment="${project.title}" aria-label="Despliegue de ${project.title} pendiente de configurar"><span>RUN_DEPLOYMENT</span></button>`
   const githubButton = repoAvailable
-    ? `<a class="repo-button" href="${project.repoUrl}" target="_blank" rel="noreferrer" aria-label="Abrir repositorio de ${project.title}">${icon('github', 'size-6')}<span>Ver repositorio</span></a>`
-    : `<button class="repo-button repo-disabled" type="button" data-missing-repo="${project.title}" aria-label="Repositorio de ${project.title} pendiente de configurar">${icon('github', 'size-6')}<span>Agregar repositorio</span></button>`
+    ? `<a class="repo-button" href="${project.repoUrl}" target="_blank" rel="noreferrer" aria-label="Abrir repositorio de ${project.title}">${icon('github', 'size-6')}<span class="sr-only">Ver repositorio</span></a>`
+    : `<button class="repo-button repo-disabled" type="button" data-missing-repo="${project.title}" aria-label="Repositorio de ${project.title} pendiente de configurar">${icon('github', 'size-6')}<span class="sr-only">Agregar repositorio</span></button>`
 
-  return `<article class="project-card reveal ${index % 2 ? 'project-reverse' : ''}">
-    <div class="project-preview">${projectVisual(project.type)}</div>
+  return `<article class="project-card reveal ${index % 2 ? 'project-reverse' : ''}" data-project-index="${index}">
+    <div class="project-preview">${project.previewImage
+      ? `<img class="project-screenshot" src="${project.previewImage}" alt="${project.previewAlt}" loading="lazy">`
+      : projectVisual(project.type)}</div>
     <div class="project-copy">
       <div class="project-meta"><span>▧ PROJECT_MODULE // ${project.code}</span>${repoAvailable ? icon('external', 'size-4') : ''}</div>
-      <h3>${project.title}</h3>
-      <p>${project.description}</p>
+      <h3 class="project-title">${project.title}</h3>
+      <p class="project-description">${project.description}</p>
       <ul>${project.stack.map(item => `<li>${item}</li>`).join('')}</ul>
-      ${githubButton}
+      <div class="project-actions">${deploymentButton}${githubButton}</div>
     </div>
   </article>`
 }
@@ -61,20 +75,23 @@ document.querySelector('#app').innerHTML = `
   <header class="nav-shell">
     <a class="brand" href="#inicio" aria-label="Ir al inicio"><span>&gt;_</span> DEV</a>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menú"><i></i><i></i><i></i></button>
-    <nav id="main-nav">${navItems.map(([n, label, id]) => `<a href="#${id}" data-section="${id}"><span>${n}.</span>${label}</a>`).join('')}</nav>
+    <nav id="main-nav">${navItems.map(([n, label, , id]) => `<a href="#${id}" data-section="${id}"><span>${n}.</span><b>${label}</b></a>`).join('')}</nav>
   </header>
-  <button class="theme-toggle" type="button" aria-label="Activar tema claro" aria-pressed="false">
-    <span class="theme-sun">${icon('sun', 'size-4')}</span>
-    <span class="theme-moon">${icon('moon', 'size-4')}</span>
-  </button>
+  <div class="top-controls">
+    <button class="language-toggle" type="button" aria-label="Cambiar a inglés" title="English">${icon('translate', 'size-5')}<span>EN</span></button>
+    <button class="theme-toggle" type="button" aria-label="Activar tema claro" aria-pressed="false">
+      <span class="theme-sun">${icon('sun', 'size-4')}</span>
+      <span class="theme-moon">${icon('moon', 'size-4')}</span>
+    </button>
+  </div>
 
   <aside class="social-rail" aria-label="Redes sociales">
     ${socialLink(profile.githubUrl, 'github', 'GitHub')}
     ${socialLink(profile.linkedinUrl, 'linkedin', 'LinkedIn')}
-    <a class="social-link" href="mailto:${profile.email}" aria-label="Correo electrónico">${icon('mail')}</a>
+    <a class="social-link email-action" href="${contactUrl('es')}" target="_blank" rel="noreferrer" aria-label="Escribir correo electrónico">${icon('mail')}</a>
     <i></i>
   </aside>
-  <aside class="email-rail"><a href="mailto:${profile.email}">${profile.email}</a><i></i></aside>
+  <aside class="email-rail"><a class="email-action" href="${contactUrl('es')}" target="_blank" rel="noreferrer">${profile.email}</a><i></i></aside>
 
   <main class="home-view">
     <section id="inicio" class="hero section-wrap">
@@ -95,10 +112,7 @@ document.querySelector('#app').innerHTML = `
           <h3>Tecnologías con las que he trabajado</h3>
           <ul class="tech-list"><li>Java / Spring Boot</li><li>JavaScript / TypeScript</li><li>React / Angular</li><li>C# / ASP.NET Core</li><li>PostgreSQL / Oracle</li><li>Docker / GitHub Actions</li><li>Firebase / MongoDB</li><li>AWS / Azure</li></ul>
         </div>
-        <div class="terminal reveal">
-          <div class="terminal-top"><i></i><i></i><i></i><span>bash — alcindo@portfolio</span></div>
-          <div class="terminal-body"><p><b>alcindo@dev:~$</b> whoami</p><p>{</p><p>&nbsp; "name": "${profile.name}",</p><p>&nbsp; "role": "${profile.role}",</p><p>&nbsp; "location": "${profile.location}",</p><p>&nbsp; "status": "Ready to build"</p><p>}</p><p><b>alcindo@dev:~$</b> <span class="terminal-cursor">█</span></p></div>
-        </div>
+        <figure class="profile-photo reveal"><img src="/alcindo-chavarria.webp" alt="Retrato de Alcindo Chavarría" loading="lazy"></figure>
       </div>
     </section>
 
@@ -124,8 +138,8 @@ document.querySelector('#app').innerHTML = `
     </section>
 
     <section id="contacto" class="contact section-wrap">
-      <div class="contact-inner reveal"><p>06. ¿Qué sigue?</p><h2>Construyamos algo<br><span>que valga la pena.</span></h2><p>Estoy abierto a nuevas oportunidades y colaboraciones. Si tienes una idea o proyecto, conversemos.</p><a class="primary-button" href="mailto:${profile.email}">${icon('mail', 'size-4')} Iniciar contacto</a></div>
-      <footer><div>${socialLink(profile.githubUrl, 'github', 'GitHub')}${socialLink(profile.linkedinUrl, 'linkedin', 'LinkedIn')}<a class="social-link" href="mailto:${profile.email}" aria-label="Correo electrónico">${icon('mail')}</a></div><p>Diseñado y construido por ${profile.name} — 2026</p><small><i></i> System Status: Operational</small></footer>
+      <div class="contact-inner reveal"><p>06. ¿Qué sigue?</p><h2>Construyamos algo<br><span>que valga la pena.</span></h2><p>Estoy abierto a nuevas oportunidades y colaboraciones. Si tienes una idea o proyecto, conversemos.</p><a class="primary-button contact-button email-action" href="${contactUrl('es')}" target="_blank" rel="noreferrer">${icon('mail', 'size-4')} <span>Iniciar contacto</span></a></div>
+      <footer><div>${socialLink(profile.githubUrl, 'github', 'GitHub')}${socialLink(profile.linkedinUrl, 'linkedin', 'LinkedIn')}<a class="social-link email-action" href="${contactUrl('es')}" target="_blank" rel="noreferrer" aria-label="Escribir correo electrónico">${icon('mail')}</a></div><p>Diseñado y construido por ${profile.name} — 2026</p><small><i></i> System Status: Operational</small></footer>
     </section>
   </main>
   <main class="all-projects-view" hidden>
@@ -140,9 +154,196 @@ document.querySelector('#app').innerHTML = `
   ${certificateDialog()}
 `
 
+const translations = {
+  es: {
+    pageTitle: 'Alcindo Chavarría | Desarrollador Full Stack',
+    pageDescription: 'Portafolio de Alcindo Chavarría, desarrollador Full Stack y estudiante de Ingeniería en Informática.',
+    heroBadge: 'Modern Full-Stack Development',
+    heroTitle: 'Desarrollo Full Stack rápido e impecable.',
+    heroCopy: 'Convierto ideas únicas en productos y experiencias digitales totalmente funcionales y de vanguardia.',
+    viewProjects: 'Ver Proyectos',
+    sections: ['Sobre mí', 'Skills', 'Experiencia', 'Proyectos', 'Certificados'],
+    about: [
+      `Hola, soy <strong>${profile.name}</strong>, estudiante de Ingeniería en Informática y desarrollador enfocado en crear aplicaciones web, APIs y soluciones basadas en microservicios.`,
+      'Trabajo principalmente con Java, Spring Boot, JavaScript y tecnologías cloud. Me interesa transformar requisitos reales en software claro, seguro y mantenible.',
+    ],
+    technologies: 'Tecnologías con las que he trabajado',
+    skills: [
+      ['Frontend Development', 'Intermedio'], ['Sistemas Backend', 'Intermedio'], ['DevOps & Cloud', 'En formación'],
+      ['Diseño de Sistemas', 'Intermedio'], ['Bases de Datos', 'Intermedio'],
+    ],
+    experienceTitle: 'Desarrollo de proyectos <span>@ Académicos y personales</span>',
+    experienceDate: '2024 — Actualidad',
+    experience: [
+      'Desarrollo APIs RESTful y microservicios con Java, Spring Boot, C# y ASP.NET Core.',
+      'Construyo interfaces responsive con React y Angular integradas con servicios backend.',
+      'Diseño bases de datos relacionales y NoSQL con PostgreSQL, Oracle, MySQL, Firebase y MongoDB.',
+      'Aplico Git, integración continua, Docker y prácticas de desarrollo seguro.',
+    ],
+    projects: [
+      ['Biblioteca Spring Boot', 'Arquitectura de microservicios para gestionar catálogo, préstamos y usuarios, con automatización de integración continua.'],
+      ['Level-Up Gamer', 'Plataforma de comercio gamer con catálogo, autenticación, carrito, pedidos y contacto, integrada con servicios backend.'],
+      ['Mega-Pokedex', 'Pokédex interactiva de las 48 megaevoluciones, con búsqueda, filtros por tipo, fichas detalladas, animaciones y datos sincronizados desde PokéAPI.'],
+      ['Perfulandia', 'Ecosistema de microservicios para ventas, usuarios, productos, inventario, pagos, órdenes, envíos y notificaciones.'],
+      ['BookReview App', 'Aplicación para descubrir, calificar y reseñar libros, con perfiles de usuario y una experiencia de lectura ordenada.'],
+      ['Microservicio de Usuarios', 'Servicio de identidad y gestión de usuarios con autenticación JWT, documentación Swagger y persistencia segura.'],
+      ['Backend Adopción de Mascotas', 'API para administrar mascotas, solicitudes de adopción y perfiles, conectada a una base de datos en la nube.'],
+      ['Level-Up Gamer Mobile', 'Aplicación Android para explorar el catálogo gamer, consultar productos y consumir servicios remotos.'],
+      ['Zona Futbolera', 'Modelo de datos y lógica de negocio para administrar equipos, jugadores, encuentros y estadísticas deportivas.'],
+      ['Usuario Service MySQL', 'Microservicio documentado para crear y consultar usuarios, con validaciones, capas y persistencia relacional.'],
+      ['Portal con Microsoft Entra ID', 'Frontend empresarial protegido con inicio de sesión, control de acceso y sesión mediante identidad de Microsoft.'],
+    ],
+    repoOpen: 'Ver repositorio', repoAdd: 'Agregar repositorio', deploymentOpen: 'Abrir proyecto desplegado', deploymentAdd: 'Agregar despliegue', viewAll: 'Ver todos los proyectos', backHome: '← Volver al inicio',
+    allProjectsTitle: 'Todos los <span>Proyectos</span>',
+    allProjectsCopy: 'Explora los proyectos que he desarrollado. Cada uno incluye una descripción de su objetivo, tecnologías utilizadas y acceso al repositorio cuando esté disponible.',
+    certificates: ['AWS Academy Cloud Foundations', 'Desarrollo Full Stack', 'Ingeniería DevOps', 'Ciberseguridad Defensiva'],
+    contactEyebrow: '06. ¿Qué sigue?', contactTitle: 'Construyamos algo<br><span>que valga la pena.</span>',
+    contactCopy: 'Estoy abierto a nuevas oportunidades y colaboraciones. Si tienes una idea o proyecto, conversemos.',
+    contactButton: 'Iniciar contacto', footer: `Diseñado y construido por ${profile.name} — 2026`, status: 'System Status: Operational',
+    menuOpen: 'Abrir menú', menuClose: 'Cerrar menú', themeLight: 'Activar tema claro', themeDark: 'Activar tema oscuro',
+    language: 'Cambiar a inglés', languageTitle: 'English', languageCode: 'EN', photoAlt: `Retrato de ${profile.name}`,
+    missingRepo: 'Falta agregar la URL del repositorio', missingDeployment: 'Falta agregar la URL del despliegue',
+    certificateUi: { previewPending: 'Vista previa pendiente', previewHelp: 'Agrega el PDF o imagen en <code>public/certificados</code> y configura <code>previewUrl</code> en <code>src/data/portfolio.js</code>.', missingCredential: 'Falta agregar el enlace oficial de' },
+  },
+  en: {
+    pageTitle: 'Alcindo Chavarría | Full Stack Developer',
+    pageDescription: 'Portfolio of Alcindo Chavarría, Full Stack developer and Computer Engineering student.',
+    heroBadge: 'Modern Full-Stack Development', heroTitle: 'Fast, flawless Full Stack development.',
+    heroCopy: 'I turn unique ideas into fully functional, cutting-edge digital products and experiences.', viewProjects: 'View Projects',
+    sections: ['About me', 'Skills', 'Experience', 'Projects', 'Certificates'],
+    about: [
+      `Hello, I am <strong>${profile.name}</strong>, a Computer Engineering student and developer focused on building web applications, APIs, and microservices-based solutions.`,
+      'I primarily work with Java, Spring Boot, JavaScript, and cloud technologies. I enjoy transforming real requirements into clear, secure, and maintainable software.',
+    ],
+    technologies: 'Technologies I have worked with',
+    skills: [
+      ['Frontend Development', 'Intermediate'], ['Backend Systems', 'Intermediate'], ['DevOps & Cloud', 'In training'],
+      ['System Design', 'Intermediate'], ['Databases', 'Intermediate'],
+    ],
+    experienceTitle: 'Project development <span>@ Academic and personal</span>', experienceDate: '2024 — Present',
+    experience: [
+      'I develop RESTful APIs and microservices with Java, Spring Boot, C#, and ASP.NET Core.',
+      'I build responsive React and Angular interfaces integrated with backend services.',
+      'I design relational and NoSQL databases with PostgreSQL, Oracle, MySQL, Firebase, and MongoDB.',
+      'I apply Git, continuous integration, Docker, and secure development practices.',
+    ],
+    projects: [
+      ['Spring Boot Library', 'Microservices architecture for managing catalogs, loans, and users, with continuous integration automation.'],
+      ['Level-Up Gamer', 'Gaming commerce platform with catalog, authentication, cart, orders, and contact features integrated with backend services.'],
+      ['Mega-Pokedex', 'Interactive Pokédex featuring all 48 Mega Evolutions, with search, type filters, detailed profiles, animations, and data synchronized from PokéAPI.'],
+      ['Perfulandia', 'Microservices ecosystem for sales, users, products, inventory, payments, orders, shipping, and notifications.'],
+      ['BookReview App', 'Application for discovering, rating, and reviewing books, with user profiles and an organized reading experience.'],
+      ['User Microservice', 'Identity and user management service with JWT authentication, Swagger documentation, and secure persistence.'],
+      ['Pet Adoption Backend', 'API for managing pets, adoption requests, and profiles, connected to a cloud database.'],
+      ['Level-Up Gamer Mobile', 'Android application for browsing the gaming catalog, viewing products, and consuming remote services.'],
+      ['Football Zone', 'Data model and business logic for managing teams, players, matches, and sports statistics.'],
+      ['MySQL User Service', 'Documented microservice for creating and retrieving users, with validations, layers, and relational persistence.'],
+      ['Microsoft Entra ID Portal', 'Protected enterprise frontend with sign-in, access control, and session management through Microsoft identity.'],
+    ],
+    repoOpen: 'View repository', repoAdd: 'Add repository', deploymentOpen: 'Open deployed project', deploymentAdd: 'Add deployment', viewAll: 'View all projects', backHome: '← Back to home',
+    allProjectsTitle: 'All <span>Projects</span>',
+    allProjectsCopy: 'Explore the projects I have developed. Each one includes its purpose, technologies used, and repository access when available.',
+    certificates: ['AWS Academy Cloud Foundations', 'Full Stack Development', 'DevOps Engineering', 'Defensive Cybersecurity'],
+    contactEyebrow: '06. What is next?', contactTitle: 'Let’s build something<br><span>worthwhile.</span>',
+    contactCopy: 'I am open to new opportunities and collaborations. If you have an idea or a project, let’s talk.',
+    contactButton: 'Start a conversation', footer: `Designed and built by ${profile.name} — 2026`, status: 'System Status: Operational',
+    menuOpen: 'Open menu', menuClose: 'Close menu', themeLight: 'Switch to light theme', themeDark: 'Switch to dark theme',
+    language: 'Cambiar a español', languageTitle: 'Español', languageCode: 'ES', photoAlt: `Portrait of ${profile.name}`,
+    missingRepo: 'Repository URL still needs to be added', missingDeployment: 'Deployment URL still needs to be added',
+    certificateUi: { previewPending: 'Preview pending', previewHelp: 'Add the PDF or image to <code>public/certificados</code> and set <code>previewUrl</code> in <code>src/data/portfolio.js</code>.', missingCredential: 'Official credential link still needs to be added for' },
+  },
+}
+
+let currentLanguage = localStorage.getItem('portfolio-language') === 'en' ? 'en' : 'es'
+
+function applyLanguage(language) {
+  currentLanguage = language
+  const copy = translations[language]
+  document.documentElement.lang = language
+  document.title = copy.pageTitle
+  document.querySelector('meta[name="description"]').setAttribute('content', copy.pageDescription)
+  document.querySelectorAll('#main-nav a').forEach((link, index) => { link.querySelector('b').textContent = navItems[index][language === 'en' ? 2 : 1] })
+  document.querySelector('.brand').setAttribute('aria-label', language === 'en' ? 'Go to home' : 'Ir al inicio')
+  document.querySelector('.hero-badge span').textContent = copy.heroBadge
+  document.querySelector('.hero h1').textContent = copy.heroTitle
+  document.querySelector('.hero-copy').textContent = copy.heroCopy
+  document.querySelector('.hero-actions .primary-button').lastChild.textContent = ` ${copy.viewProjects}`
+  document.querySelectorAll('.section-title h2').forEach((title, index) => { title.textContent = copy.sections[index] })
+  const aboutParagraphs = document.querySelectorAll('.about-copy > p')
+  aboutParagraphs.forEach((paragraph, index) => { paragraph.innerHTML = copy.about[index] })
+  document.querySelector('.about-copy h3').textContent = copy.technologies
+  document.querySelector('.profile-photo img').setAttribute('alt', copy.photoAlt)
+  document.querySelectorAll('.skill-card').forEach((card, index) => { card.querySelector('h3').textContent = copy.skills[index][0]; card.querySelector('small').textContent = copy.skills[index][1] })
+  document.querySelector('.experience-head h3').innerHTML = copy.experienceTitle
+  document.querySelector('.experience-head time').textContent = copy.experienceDate
+  document.querySelectorAll('.experience > ul li').forEach((item, index) => { item.textContent = copy.experience[index] })
+  document.querySelectorAll('.project-card').forEach(card => {
+    const projectIndex = Number(card.dataset.projectIndex)
+    const project = copy.projects[projectIndex]
+    card.querySelector('.project-title').textContent = project[0]
+    card.querySelector('.project-description').textContent = project[1]
+    const repoButton = card.querySelector('.repo-button')
+    const repoLabel = repoButton?.querySelector('.sr-only')
+    const repoMissing = repoButton?.classList.contains('repo-disabled')
+    if (repoLabel) repoLabel.textContent = repoMissing ? copy.repoAdd : copy.repoOpen
+    if (repoButton) repoButton.setAttribute('aria-label', `${repoMissing ? copy.repoAdd : copy.repoOpen}: ${project[0]}`)
+    if (repoMissing) repoButton.dataset.missingRepo = project[0]
+    const deploymentButton = card.querySelector('.deployment-button')
+    const deploymentMissing = deploymentButton?.classList.contains('deployment-disabled')
+    if (deploymentButton) deploymentButton.setAttribute('aria-label', `${deploymentMissing ? copy.deploymentAdd : copy.deploymentOpen}: ${project[0]}`)
+    if (deploymentMissing) deploymentButton.dataset.missingDeployment = project[0]
+    if (projectIndex === 0) {
+      card.querySelector('.library-nav b').textContent = language === 'en' ? 'LIBRARY' : 'BIBLIOTECA'
+      card.querySelector('.library-nav span').innerHTML = language === 'en' ? 'Catalog &nbsp; Loans &nbsp; Users' : 'Catálogo &nbsp; Préstamos &nbsp; Usuarios'
+    }
+    if (projectIndex === 2) card.querySelector('.project-screenshot')?.setAttribute('alt', language === 'en' ? 'Mega-Pokedex project preview' : 'Vista previa del proyecto Mega-Pokedex')
+    if (projectIndex === 5) card.querySelector('.swagger-head span').textContent = language === 'en' ? 'USERS' : 'USUARIOS'
+    if (projectIndex === 6) card.querySelector('.generic-title').textContent = language === 'en' ? 'FIND A COMPANION' : 'ENCUENTRA UN COMPAÑERO'
+    if (projectIndex === 8) {
+      card.querySelector('.generic-title').textContent = language === 'en' ? 'FOOTBALL ZONE' : 'ZONA FUTBOLERA'
+      const scoreLabels = card.querySelectorAll('.score-board span')
+      scoreLabels[0].textContent = language === 'en' ? 'HOME' : 'LOCAL'
+      scoreLabels[1].textContent = language === 'en' ? 'AWAY' : 'VISITA'
+    }
+    if (projectIndex === 10) {
+      card.querySelector('.generic-title').textContent = language === 'en' ? 'SECURE IDENTITY' : 'IDENTIDAD SEGURA'
+      card.querySelector('.identity-lock span').textContent = language === 'en' ? 'Access granted' : 'Acceso autorizado'
+    }
+  })
+  document.querySelector('.projects-section .projects-more a').textContent = copy.viewAll
+  document.querySelectorAll('.back-link, .all-projects .projects-more a').forEach(link => { link.textContent = copy.backHome })
+  document.querySelector('.all-projects-heading h1').innerHTML = copy.allProjectsTitle
+  document.querySelector('.all-projects-heading p').textContent = copy.allProjectsCopy
+  document.querySelectorAll('.cert-card').forEach((card, index) => {
+    card.querySelector('h3').textContent = copy.certificates[index]
+    const eye = card.querySelector('[data-preview-cert]')
+    const external = card.querySelector('[data-verify-cert]')
+    eye.title = language === 'en' ? 'View certificate' : 'Ver certificado'
+    eye.setAttribute('aria-label', `${eye.title}: ${copy.certificates[index]}`)
+    external.title = language === 'en' ? 'Open validation' : 'Abrir validación'
+    external.setAttribute('aria-label', `${external.title}: ${copy.certificates[index]}`)
+  })
+  const contact = document.querySelector('.contact-inner')
+  contact.querySelector(':scope > p:first-child').textContent = copy.contactEyebrow
+  contact.querySelector('h2').innerHTML = copy.contactTitle
+  contact.querySelector(':scope > p:not(:first-child)').textContent = copy.contactCopy
+  contact.querySelector('.contact-button span').textContent = copy.contactButton
+  document.querySelector('footer > p').textContent = copy.footer
+  document.querySelector('footer small').innerHTML = `<i></i> ${copy.status}`
+  document.querySelectorAll('.email-action').forEach(link => { link.href = contactUrl(language); link.setAttribute('aria-label', language === 'en' ? 'Write an email' : 'Escribir correo electrónico') })
+  document.querySelector('.language-toggle span').textContent = copy.languageCode
+  document.querySelector('.language-toggle').setAttribute('aria-label', copy.language)
+  document.querySelector('.language-toggle').title = copy.languageTitle
+  document.querySelector('.certificate-dialog .dialog-heading > span').textContent = language === 'en' ? 'VERIFICATION // CERTIFICATE_VIEWER' : 'VERIFICACIÓN // CERTIFICATE_VIEWER'
+  document.querySelector('.dialog-verify').lastChild.textContent = language === 'en' ? ' View official credential' : ' Ver credencial oficial'
+  document.querySelector('.dialog-close').setAttribute('aria-label', language === 'en' ? 'Close certificate' : 'Cerrar certificado')
+  localStorage.setItem('portfolio-language', language)
+}
+
 const menuButton = document.querySelector('.menu-button')
 const nav = document.querySelector('#main-nav')
 const navLinks = [...nav.querySelectorAll('a')]
+const languageToggle = document.querySelector('.language-toggle')
 const themeToggle = document.querySelector('.theme-toggle')
 const themeColor = document.querySelector('meta[name="theme-color"]')
 
@@ -150,11 +351,17 @@ function applyTheme(theme) {
   const isLight = theme === 'light'
   document.documentElement.dataset.theme = theme
   themeToggle.setAttribute('aria-pressed', String(isLight))
-  themeToggle.setAttribute('aria-label', isLight ? 'Activar tema oscuro' : 'Activar tema claro')
+  const copy = translations[currentLanguage]
+  themeToggle.setAttribute('aria-label', isLight ? copy.themeDark : copy.themeLight)
   themeColor.setAttribute('content', isLight ? '#f4f7fb' : '#020617')
 }
 
+applyLanguage(currentLanguage)
 applyTheme(document.documentElement.dataset.theme || 'dark')
+languageToggle.addEventListener('click', () => {
+  applyLanguage(currentLanguage === 'es' ? 'en' : 'es')
+  applyTheme(document.documentElement.dataset.theme || 'dark')
+})
 themeToggle.addEventListener('click', () => {
   const nextTheme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'
   applyTheme(nextTheme)
@@ -165,7 +372,8 @@ function setMenu(open) {
   menuButton.classList.toggle('open', open)
   nav.classList.toggle('open', open)
   menuButton.setAttribute('aria-expanded', String(open))
-  menuButton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú')
+  const copy = translations[currentLanguage]
+  menuButton.setAttribute('aria-label', open ? copy.menuClose : copy.menuOpen)
 }
 
 menuButton.addEventListener('click', () => setMenu(!nav.classList.contains('open')))
@@ -215,7 +423,11 @@ function showToast(message) {
 }
 
 document.querySelectorAll('[data-missing-repo]').forEach(button => button.addEventListener('click', () => {
-  showToast(`Falta agregar la URL del repositorio: ${button.dataset.missingRepo}`)
+  showToast(`${translations[currentLanguage].missingRepo}: ${button.dataset.missingRepo}`)
 }))
 
-setupCertificates(certificates, showToast)
+document.querySelectorAll('[data-missing-deployment]').forEach(button => button.addEventListener('click', () => {
+  showToast(`${translations[currentLanguage].missingDeployment}: ${button.dataset.missingDeployment}`)
+}))
+
+setupCertificates(certificates, showToast, () => translations[currentLanguage].certificateUi)

@@ -15,7 +15,7 @@ export const skills = [
   { icon: 'database', name: 'Bases de Datos', level: 'Intermedio', progress: 80, color: 'pink' },
 ]
 
-// Pega la URL real de cada repositorio en repoUrl.
+// Pega la URL real del repositorio en repoUrl y la URL pública del proyecto en deploymentUrl.
 export const projects = [
   {
     code: '0101',
@@ -23,6 +23,7 @@ export const projects = [
     type: 'biblioteca',
     description: 'Arquitectura de microservicios para gestionar catálogo, préstamos y usuarios, con automatización de integración continua.',
     stack: ['Java 21', 'Spring Boot', 'PostgreSQL', 'Docker', 'GitHub Actions'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -31,14 +32,18 @@ export const projects = [
     type: 'gamer',
     description: 'Plataforma de comercio gamer con catálogo, autenticación, carrito, pedidos y contacto, integrada con servicios backend.',
     stack: ['React', 'Spring Boot', 'Firebase', 'Axios'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
     code: '0111',
-    title: 'Movilidad Sostenible',
-    type: 'movilidad',
-    description: 'Aplicación urbana para planificar rutas multimodales, obtener incentivos y visualizar el impacto ambiental de cada viaje.',
-    stack: ['UX Planning', 'APIs', 'ProjectLibre', 'Trello'],
+    title: 'Mega-Pokedex',
+    type: 'mega-pokedex',
+    description: 'Pokédex interactiva de las 48 megaevoluciones, con búsqueda, filtros por tipo, fichas detalladas, animaciones y datos sincronizados desde PokéAPI.',
+    stack: ['Vite', 'JavaScript ES Modules', 'CSS moderno', 'PokéAPI', 'ESLint'],
+    previewImage: '/mega-pokedex.webp',
+    previewAlt: 'Vista previa del proyecto Mega-Pokedex',
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -47,6 +52,7 @@ export const projects = [
     type: 'perfulandia',
     description: 'Ecosistema de microservicios para ventas, usuarios, productos, inventario, pagos, órdenes, envíos y notificaciones.',
     stack: ['Java', 'Spring Boot', 'OpenAPI', 'Oracle'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -55,6 +61,7 @@ export const projects = [
     type: 'books',
     description: 'Aplicación para descubrir, calificar y reseñar libros, con perfiles de usuario y una experiencia de lectura ordenada.',
     stack: ['C#', 'ASP.NET Core', 'SQL Server', 'Bootstrap'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -63,6 +70,7 @@ export const projects = [
     type: 'users',
     description: 'Servicio de identidad y gestión de usuarios con autenticación JWT, documentación Swagger y persistencia segura.',
     stack: ['C#', 'ASP.NET Core', 'JWT', 'Swagger', 'SQL Server'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -71,6 +79,7 @@ export const projects = [
     type: 'pets',
     description: 'API para administrar mascotas, solicitudes de adopción y perfiles, conectada a una base de datos en la nube.',
     stack: ['Node.js', 'Express', 'MongoDB Atlas', 'REST API'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -79,6 +88,7 @@ export const projects = [
     type: 'mobile',
     description: 'Aplicación Android para explorar el catálogo gamer, consultar productos y consumir servicios remotos.',
     stack: ['Kotlin', 'Jetpack Compose', 'Retrofit', 'Android'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -87,6 +97,7 @@ export const projects = [
     type: 'football',
     description: 'Modelo de datos y lógica de negocio para administrar equipos, jugadores, encuentros y estadísticas deportivas.',
     stack: ['Oracle', 'PL/SQL', 'Data Modeling', 'SQL'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -95,6 +106,7 @@ export const projects = [
     type: 'service',
     description: 'Microservicio documentado para crear y consultar usuarios, con validaciones, capas y persistencia relacional.',
     stack: ['Java', 'Spring Boot', 'MySQL', 'Swagger'],
+    deploymentUrl: '',
     repoUrl: '',
   },
   {
@@ -103,6 +115,7 @@ export const projects = [
     type: 'identity',
     description: 'Frontend empresarial protegido con inicio de sesión, control de acceso y sesión mediante identidad de Microsoft.',
     stack: ['Angular', 'TypeScript', 'MSAL', 'Microsoft Entra ID'],
+    deploymentUrl: '',
     repoUrl: '',
   },
 ]

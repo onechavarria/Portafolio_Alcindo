@@ -15,6 +15,7 @@ const paths = {
   arrow: '<path d="M5 16h22M21 10l6 6-6 6"/>',
   sun: '<circle cx="16" cy="16" r="5"/><path d="M16 3v3M16 26v3M3 16h3M26 16h3M6.8 6.8l2.1 2.1M23.1 23.1l2.1 2.1M25.2 6.8l-2.1 2.1M8.9 23.1l-2.1 2.1"/>',
   moon: '<path d="M25 20.2A11 11 0 0 1 11.8 7 10.5 10.5 0 1 0 25 20.2z"/>',
+  translate: '<path d="M5 7h12M11 4v3M8 7c.8 4.8 3.5 8.5 8 11M15 7c-.7 4.4-3.2 8.2-7.5 11M18 27l5-13 5 13M20 22h6"/>',
 }
 
 export function icon(name, className = 'size-5') {
