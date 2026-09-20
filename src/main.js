@@ -57,7 +57,7 @@ const projectCard = (project, index) => {
     : `<button class="repo-button repo-disabled" type="button" data-missing-repo="${project.title}" aria-label="Repositorio de ${project.title} pendiente de configurar">${icon('github', 'size-6')}<span class="sr-only">Agregar repositorio</span></button>`
 
   return `<article class="project-card reveal ${index % 2 ? 'project-reverse' : ''}" data-project-index="${index}">
-    <div class="project-preview">${project.previewImage
+    <div class="project-preview ${project.previewImage ? 'project-preview-image' : ''}">${project.previewImage
       ? `<img class="project-screenshot" src="${project.previewImage}" alt="${project.previewAlt}" loading="lazy">`
       : projectVisual(project.type)}</div>
     <div class="project-copy">
@@ -169,8 +169,9 @@ const translations = {
     ],
     technologies: 'Tecnologías con las que he trabajado',
     skills: [
-      ['Frontend Development', 'Intermedio'], ['Sistemas Backend', 'Intermedio'], ['DevOps & Cloud', 'En formación'],
-      ['Diseño de Sistemas', 'Intermedio'], ['Bases de Datos', 'Intermedio'],
+      ['Frontend Development', 'Intermedio'], ['Backend Development', 'Intermedio'], ['DevOps & Cloud', 'Intermedio'],
+      ['Arquitectura de Software', 'Intermedio'], ['Desarrollo Móvil', 'Intermedio'], ['Bases de Datos', 'Intermedio'],
+      ['Testing & Calidad de Software', 'Intermedio'], ['Integración Continua & Despliegue (CI/CD)', 'Intermedio'],
     ],
     experienceTitle: 'Desarrollo de proyectos <span>@ Académicos y personales</span>',
     experienceDate: '2024 — Actualidad',
@@ -181,8 +182,8 @@ const translations = {
       'Aplico Git, integración continua, Docker y prácticas de desarrollo seguro.',
     ],
     projects: [
-      ['Biblioteca Spring Boot', 'Arquitectura de microservicios para gestionar catálogo, préstamos y usuarios, con automatización de integración continua.'],
-      ['Level-Up Gamer', 'Plataforma de comercio gamer con catálogo, autenticación, carrito, pedidos y contacto, integrada con servicios backend.'],
+      ['Pedidos360', 'Tienda responsive de videojuegos con catálogo, búsqueda, carrito, checkout, historial de pedidos y autenticación local o social.'],
+      ['Pedidos360 API', 'API REST modular para autenticación, usuarios, productos, carrito, pagos y pedidos, con seguridad JWT y documentación Swagger.'],
       ['Mega-Pokedex', 'Pokédex interactiva de las 48 megaevoluciones, con búsqueda, filtros por tipo, fichas detalladas, animaciones y datos sincronizados desde PokéAPI.'],
       ['Perfulandia', 'Ecosistema de microservicios para ventas, usuarios, productos, inventario, pagos, órdenes, envíos y notificaciones.'],
       ['BookReview App', 'Aplicación para descubrir, calificar y reseñar libros, con perfiles de usuario y una experiencia de lectura ordenada.'],
@@ -217,8 +218,9 @@ const translations = {
     ],
     technologies: 'Technologies I have worked with',
     skills: [
-      ['Frontend Development', 'Intermediate'], ['Backend Systems', 'Intermediate'], ['DevOps & Cloud', 'In training'],
-      ['System Design', 'Intermediate'], ['Databases', 'Intermediate'],
+      ['Frontend Development', 'Intermediate'], ['Backend Development', 'Intermediate'], ['DevOps & Cloud', 'Intermediate'],
+      ['Software Architecture', 'Intermediate'], ['Mobile Development', 'Intermediate'], ['Databases', 'Intermediate'],
+      ['Software Testing & Quality', 'Intermediate'], ['Continuous Integration & Deployment (CI/CD)', 'Intermediate'],
     ],
     experienceTitle: 'Project development <span>@ Academic and personal</span>', experienceDate: '2024 — Present',
     experience: [
@@ -228,8 +230,8 @@ const translations = {
       'I apply Git, continuous integration, Docker, and secure development practices.',
     ],
     projects: [
-      ['Spring Boot Library', 'Microservices architecture for managing catalogs, loans, and users, with continuous integration automation.'],
-      ['Level-Up Gamer', 'Gaming commerce platform with catalog, authentication, cart, orders, and contact features integrated with backend services.'],
+      ['Pedidos360', 'Responsive video game store with catalog, search, cart, checkout, order history, and local or social authentication.'],
+      ['Pedidos360 API', 'Modular REST API for authentication, users, products, cart, payments, and orders, with JWT security and Swagger documentation.'],
       ['Mega-Pokedex', 'Interactive Pokédex featuring all 48 Mega Evolutions, with search, type filters, detailed profiles, animations, and data synchronized from PokéAPI.'],
       ['Perfulandia', 'Microservices ecosystem for sales, users, products, inventory, payments, orders, shipping, and notifications.'],
       ['BookReview App', 'Application for discovering, rating, and reviewing books, with user profiles and an organized reading experience.'],
@@ -292,11 +294,8 @@ function applyLanguage(language) {
     const deploymentMissing = deploymentButton?.classList.contains('deployment-disabled')
     if (deploymentButton) deploymentButton.setAttribute('aria-label', `${deploymentMissing ? copy.deploymentAdd : copy.deploymentOpen}: ${project[0]}`)
     if (deploymentMissing) deploymentButton.dataset.missingDeployment = project[0]
-    if (projectIndex === 0) {
-      card.querySelector('.library-nav b').textContent = language === 'en' ? 'LIBRARY' : 'BIBLIOTECA'
-      card.querySelector('.library-nav span').innerHTML = language === 'en' ? 'Catalog &nbsp; Loans &nbsp; Users' : 'Catálogo &nbsp; Préstamos &nbsp; Usuarios'
-    }
-    if (projectIndex === 2) card.querySelector('.project-screenshot')?.setAttribute('alt', language === 'en' ? 'Mega-Pokedex project preview' : 'Vista previa del proyecto Mega-Pokedex')
+    const screenshot = card.querySelector('.project-screenshot')
+    if (screenshot) screenshot.setAttribute('alt', language === 'en' ? `${project[0]} project preview` : `Vista previa del proyecto ${project[0]}`)
     if (projectIndex === 5) card.querySelector('.swagger-head span').textContent = language === 'en' ? 'USERS' : 'USUARIOS'
     if (projectIndex === 6) card.querySelector('.generic-title').textContent = language === 'en' ? 'FIND A COMPANION' : 'ENCUENTRA UN COMPAÑERO'
     if (projectIndex === 8) {
