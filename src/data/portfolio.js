@@ -43,8 +43,8 @@ export const projects = [
     stack: ['Vite', 'JavaScript ES Modules', 'CSS moderno', 'PokéAPI', 'ESLint'],
     previewImage: '/mega-pokedex.webp',
     previewAlt: 'Vista previa del proyecto Mega-Pokedex',
-    deploymentUrl: '',
-    repoUrl: '',
+    deploymentUrl: 'https://megapokedex.alcindo.tech/',
+    repoUrl: 'https://github.com/onechavarria/Mega-Pokedex',
   },
   {
     code: '1001',
