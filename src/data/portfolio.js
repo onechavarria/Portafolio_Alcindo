@@ -28,8 +28,8 @@ export const projects = [
     stack: ['Angular 21', 'TypeScript', 'RxJS', 'HTML5', 'CSS3'],
     previewImage: '/pedidos360.webp',
     previewAlt: 'Vista previa del frontend de Pedidos360',
-    deploymentUrl: '',
-    repoUrl: '',
+    deploymentUrl: 'https://pedidos360.alcindo.tech/',
+    repoUrl: 'https://github.com/onechavarria/frontend-pedidos360',
   },
   {
     code: '0110',
@@ -39,8 +39,8 @@ export const projects = [
     stack: ['Node.js 24', 'Express 5', 'PostgreSQL', 'Swagger', 'JWT', 'Docker'],
     previewImage: '/pedidos360-api.webp',
     previewAlt: 'Vista previa de la documentación Swagger de Pedidos360 API',
-    deploymentUrl: '',
-    repoUrl: '',
+    deploymentUrl: 'https://api-pedidos360.alcindo.tech/api/docs/',
+    repoUrl: 'https://github.com/onechavarria/backend-pedido360',
   },
   {
     code: '0111',
@@ -50,8 +50,8 @@ export const projects = [
     stack: ['Vite', 'JavaScript ES Modules', 'CSS moderno', 'PokéAPI', 'ESLint'],
     previewImage: '/mega-pokedex.webp',
     previewAlt: 'Vista previa del proyecto Mega-Pokedex',
-    deploymentUrl: '',
-    repoUrl: '',
+    deploymentUrl: 'https://megapokedex.alcindo.tech/',
+    repoUrl: 'https://github.com/onechavarria/Mega-Pokedex',
   },
   {
     code: '1001',
