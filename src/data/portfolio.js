@@ -2,7 +2,7 @@ export const profile = {
   name: 'Alcindo Chavarría',
   role: 'Full Stack Developer',
   location: 'Chile',
-  email: 'onechavito1615@gmail.com',
+  email: 'alcindochavarria@gmail.com',
   githubUrl: 'https://github.com/onechavarria',
   linkedinUrl: 'https://www.linkedin.com/in/onechavarria',
 }
